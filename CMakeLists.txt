@@ -12,15 +12,17 @@ cmake_policy(SET CMP0167 NEW)
 find_package(Boost 1.85.0 REQUIRED COMPONENTS json thread chrono)
 # set(YAML_CPP_LIBRARY_DIR ${PROJECT_EXTERNAL}/yaml-cpp/build)
 # set(yaml-cpp_DIR ${PROJECT_EXTERNAL}/yaml-cpp/build)
+find_package(spdlog REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
-include(FetchContent)
+# include(FetchContent)
 
-FetchContent_Declare(
-  yaml-cpp
-  GIT_REPOSITORY https://github.com/jbeder/yaml-cpp.git
-  GIT_TAG master # Can be a tag (yaml-cpp-x.x.x), a commit hash, or a branch name (master)
-)
-FetchContent_MakeAvailable(yaml-cpp)
+# FetchContent_Declare(
+#   yaml-cpp
+#   GIT_REPOSITORY https://github.com/jbeder/yaml-cpp.git
+#   GIT_TAG master # Can be a tag (yaml-cpp-x.x.x), a commit hash, or a branch name (master)
+# )
+# FetchContent_MakeAvailable(yaml-cpp)
 
 
 include_directories(${PROJECT_ROOT}/include)
