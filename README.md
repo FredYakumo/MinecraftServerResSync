@@ -18,11 +18,11 @@ res:
     path:
         - "path/to/file_list"
         - "path/to/another/file_list"
-  - class_name: ""
+  - class_name: "unused"
     path: "path/to/no_used"
 ```
 
 ## Start manage server with cmd line:
 ```shell
-    ./server/server -c config.yaml
+./server/server -c config.yaml
 ```
