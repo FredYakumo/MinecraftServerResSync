@@ -21,5 +21,6 @@ int main(int argc, char *argv[]) {
 
     info("Start Server");
     
-    load_config_from_yaml_file("config.yaml");
+    models::ManageResource manage_res {};
+    load_config_from_yaml_file("config.yaml", manage_res);
 }

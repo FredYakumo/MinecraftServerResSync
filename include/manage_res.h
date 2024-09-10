@@ -4,20 +4,16 @@
 #include <string>
 #include <string_view>
 #include <unordered_map>
+#include <vector>
 
 namespace models {
 
-class ModelFileClass {
-public:
-  std::unordered_map<std::string, std::string> file_name_to_hash;
+struct ModelFileClass {
+  std::vector<std::string> path_list;
 };
 
 class ManageResource {
 public:
-  ManageResource() : ManageResource("") {}
-  ManageResource(const char *class_name) : class_name(class_name) {}
-
-  std::string class_name;
   std::unordered_map<std::string_view, ModelFileClass> managed_class_map;
 };
 
