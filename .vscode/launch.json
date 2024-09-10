@@ -7,7 +7,7 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug",
+            "name": "Debug server",
             "program": "${workspaceFolder}/build/server/server",
             "args": [],
             "cwd": "${workspaceFolder}"

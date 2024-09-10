@@ -21,12 +21,13 @@ result::Result load_config_from_yaml_file(const char *file_path) {
     auto config = YAML::Load(utils::read_to_end(fs));
 
     if (!config["res"]) {
-        spdlog::error("Config load failed: not found res.");
+        spdlog::error("Config load failed: not found [res]");
         return result::Failed;
     }
 
-
-    spdlog::debug("{0}", config["res"]["class_name"].as<std::string>());
+    for (auto it : config["res"]) {
+        spdlog::info("class_name: {0}\npath: {1}", it["class_name"].as<std::string>(), it["path"].as<std::string>());
+    }
 
     return result::Success;
 }
