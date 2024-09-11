@@ -1,3 +1,11 @@
+host: 0.0.0.0
+port: 23333
+thread_count: 8
+outbound_speed_limit_kb: 255
 res:
-  - class_name: "cate A"
-    path: "server"
+  - class_name: "main"
+    path:
+        - "path/to/file_list"
+        - "path/to/another/file_list"
+  - class_name: "unused"
+    path: "path/to/no_used"

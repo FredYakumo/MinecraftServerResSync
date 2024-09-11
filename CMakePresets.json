@@ -20,6 +20,20 @@
             }
         },
         {
+            "name": "make-file",
+            "hidden": true,
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/build/",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++",
+                "CMAKE_C_STANDARD": "17",
+                "CMAKE_CXX_STANDARD": "17",
+                "spdlog_DIR": "${sourceDir}/external/spdlog/build",
+                "yaml-cpp_DIR": "${sourceDir}/external/yaml-cpp/build"
+            }
+        },
+        {
             "name": "windows-ninja-vcpkg-debug",
             "inherits": "windows-ninja-vcpkg",
             "cacheVariables": {
@@ -29,6 +43,20 @@
         {
             "name": "windows-ninja-vcpkg-release",
             "inherits": "windows-ninja-vcpkg",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "make-debug",
+            "inherits": "make-file",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "make-release",
+            "inherits": "make-file",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"
             }
@@ -43,6 +71,16 @@
         {
             "name": "windows-release-build",
             "configurePreset": "windows-ninja-vcpkg-release",
+            "configuration": "Release"
+        },
+        {
+            "name": "make-file-debug-build",
+            "configurePreset": "make-debug",
+            "configuration": "Debug"
+        },
+        {
+            "name": "make-file-release-build",
+            "configurePreset": "make-release",
             "configuration": "Release"
         }
     ]
