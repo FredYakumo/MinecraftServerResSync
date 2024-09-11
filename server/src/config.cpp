@@ -3,6 +3,7 @@
 #include "config.h"
 #include "manage_res.h"
 #include "utils.hpp"
+#include <yaml-cpp/exceptions.h>
 #include <fstream>
 #include <memory>
 #include <mutex>
@@ -37,12 +38,20 @@ result::Result load_config_from_yaml_file(const char *file_path, models::ManageR
 
         auto cs = models::ModelFileClass {};
         
-        auto single_path = path.as<std::string>();
-
-        if (single_path.size() > 0) {
+        std::string single_path {};
+        try {
+            auto single_path = path.as<std::string>();
+            if (single_path.size() > 0) {
             spdlog::debug("path(single): {0}", single_path);
             cs.path_list.push_back(std::move(single_path));
         } else {
+            for (auto path_it : path) {
+                std::string ps_obj = path_it.as<std::string>();
+                spdlog::debug("path: {0}", ps_obj);
+                cs.path_list.push_back(std::move(ps_obj));
+            }
+        }
+        } catch (YAML::Exception e) {
             for (auto path_it : path) {
                 std::string ps_obj = path_it.as<std::string>();
                 spdlog::debug("path: {0}", ps_obj);

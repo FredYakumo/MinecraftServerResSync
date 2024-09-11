@@ -6,12 +6,31 @@
             "hidden": true,
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build/",
+            "environment": {
+                "INCLUDE": "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.40.33807/include;C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Auxiliary/VS/include;C:/Program Files (x86)/Windows Kits/10/include/10.0.22621.0/ucrt;C:/Program Files (x86)/Windows Kits/10//include/10.0.22621.0//um;C:/Program Files (x86)/Windows Kits/10//include/10.0.22621.0//shared;C:/Program Files (x86)/Windows Kits/10//include/10.0.22621.0//winrt;C:/Program Files (x86)/Windows Kits/10//include/10.0.22621.0//cppwinrt;C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.40.33807/include;C:/Program Files (x86)/Windows Kits/10/Include/10.0.22621.0/ucrt"
+            },
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "clang",
                 "CMAKE_CXX_COMPILER": "clang",
                 "CMAKE_C_STANDARD": "17",
                 "CMAKE_CXX_STANDARD": "17",
+                "CMAKE_LINKER": "link",
+                "CMAKE_RC_COMPILER": "rc",
                 "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+            }
+        },
+        {
+            "name": "make-file",
+            "hidden": true,
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/build/",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++",
+                "CMAKE_C_STANDARD": "17",
+                "CMAKE_CXX_STANDARD": "17",
+                "spdlog_DIR": "${sourceDir}/external/spdlog/build",
+                "yaml-cpp_DIR": "${sourceDir}/external/yaml-cpp/build"
             }
         },
         {
@@ -27,6 +46,28 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"
             }
+        },
+        {
+            "name": "make-debug",
+            "inherits": "make-file",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "macos-debug",
+            "inherits": "make-debug",
+            "environment": {
+                "LDFLAGS": "-L/opt/homebrew/opt/openssl@3.0/lib",
+                "CPPFLAGS": "-I/opt/homebrew/opt/openssl@3.0/include"
+            }
+        },
+        {
+            "name": "make-release",
+            "inherits": "make-file",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
         }
     ],
     "buildPresets": [
@@ -38,6 +79,16 @@
         {
             "name": "windows-release-build",
             "configurePreset": "windows-ninja-vcpkg-release",
+            "configuration": "Release"
+        },
+        {
+            "name": "make-file-debug-build",
+            "configurePreset": "make-debug",
+            "configuration": "Debug"
+        },
+        {
+            "name": "make-file-release-build",
+            "configurePreset": "make-release",
             "configuration": "Release"
         }
     ]
