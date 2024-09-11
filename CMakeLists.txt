@@ -14,7 +14,7 @@ find_package(Boost 1.85.0 REQUIRED COMPONENTS json thread chrono)
 # set(yaml-cpp_DIR ${PROJECT_EXTERNAL}/yaml-cpp/build)
 find_package(spdlog REQUIRED)
 find_package(OpenSSL REQUIRED)
-# find_package(yaml-cpp REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
 # include(FetchContent)
 
