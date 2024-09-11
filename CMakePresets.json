@@ -55,6 +55,14 @@
             }
         },
         {
+            "name": "macos-debug",
+            "inherits": "make-debug",
+            "environment": {
+                "LDFLAGS": "-L/opt/homebrew/opt/openssl@3.0/lib",
+                "CPPFLAGS": "-I/opt/homebrew/opt/openssl@3.0/include"
+            }
+        },
+        {
             "name": "make-release",
             "inherits": "make-file",
             "cacheVariables": {
