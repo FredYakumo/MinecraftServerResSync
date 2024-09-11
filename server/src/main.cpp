@@ -24,7 +24,6 @@ int main(int argc, char *argv[]) {
     
     models::ManageResource manage_res {};
     load_config_from_yaml_file("config.yaml", manage_res);
-    info("path: {0}", manage_res.managed_class_map["main"].path_list[0].size());    
     auto file_hash_map = res_manage::get_path_file_list(manage_res.managed_class_map["main"].path_list[0].c_str());
     for (const auto &it : file_hash_map) {
         info("file: {0}, sha1: {1}", it.first, it.second);
