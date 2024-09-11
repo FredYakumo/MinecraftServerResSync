@@ -9,7 +9,7 @@ set(PROJECT_EXTERNAL ${PROJECT_ROOT}/external)
 
 cmake_policy(SET CMP0167 NEW)
 
-find_package(Boost 1.85.0 REQUIRED COMPONENTS json thread chrono)
+find_package(Boost 1.85.0 REQUIRED COMPONENTS json thread chrono filesystem)
 # set(YAML_CPP_LIBRARY_DIR ${PROJECT_EXTERNAL}/yaml-cpp/build)
 # set(yaml-cpp_DIR ${PROJECT_EXTERNAL}/yaml-cpp/build)
 find_package(spdlog REQUIRED)

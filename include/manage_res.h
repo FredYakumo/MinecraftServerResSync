@@ -14,7 +14,7 @@ struct ModelFileClass {
 
 class ManageResource {
 public:
-  std::unordered_map<std::string_view, ModelFileClass> managed_class_map;
+  std::unordered_map<std::string, ModelFileClass> managed_class_map;
 };
 
 } // namespace models
