@@ -12,9 +12,9 @@
 #include <yaml-cpp/yaml.h>
 
 extern std::shared_ptr<std::mutex> global_managed_res_mtx;
-extern std::shared_ptr<models::ManageResource> global_managed_res_data;
+extern std::shared_ptr<models::ManageClassPathMap> global_managed_res_data;
 
-result::Result load_config_from_yaml_file(const char *file_path, models::ManageResource &out_manage_res) {
+result::Result load_config_from_yaml_file(const char *file_path, models::ManageClassPathMap &out_manage_res) {
     spdlog::debug("Load config file from: {0}", file_path);
     auto fs = std::ifstream { file_path };
     if (!fs.is_open()) {
@@ -29,14 +29,14 @@ result::Result load_config_from_yaml_file(const char *file_path, models::ManageR
         return result::Failed;
     }
 
-    out_manage_res = models::ManageResource {};
+    out_manage_res = models::ManageClassPathMap {};
 
     for (auto class_it : config["res"]) {
         auto class_name { class_it["class_name"].as<std::string>() };
         spdlog::debug("Class name: {0}", class_name);
         auto path { class_it["path"] };
 
-        auto cs = models::ModelFileClass {};
+        auto cs = models::ClassPathList {};
         
         std::string single_path {};
         try {

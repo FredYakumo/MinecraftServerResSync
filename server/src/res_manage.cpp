@@ -37,3 +37,13 @@ std::unordered_map<std::string, std::string> res_manage::get_path_file_list(cons
 
     return std::move(ret);
 }
+
+std::unordered_map<std::string, std::string> res_manage::fetch_file_hash_map_from_managed_res(const models::ManageClassPathMap &managed_res,
+    const std::unordered_set<std::string_view> &skip_class_name_set) {
+    for (const auto &it : managed_res.managed_class_map) {
+        if (skip_class_name_set.find(it.first) != std::cend(skip_class_name_set)) {
+            continue;
+        }
+        
+    }
+}
