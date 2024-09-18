@@ -8,7 +8,7 @@
 
 namespace res_manage {
     std::unordered_map<std::string, std::string> get_path_file_list(const char *base_path);
-    std::unordered_map<std::string, std::string> fetch_file_hash_map_from_managed_res(const models::ManageClassPathMap &managed_res,
+    models::ClassFileResource fetch_file_hash_map_from_managed_res(const models::ManageClassPathMap &managed_res,
         const std::unordered_set<std::string_view> &skip_class_name_set);
 }
 

@@ -5,6 +5,7 @@
 #include <spdlog/spdlog.h>
 #include <fstream>
 #include <vector>
+#include "models.h"
 #include "utils.hpp"
 
 namespace fs = boost::filesystem;
@@ -39,15 +40,21 @@ std::unordered_map<std::string, std::string> res_manage::get_path_file_list(cons
     return std::move(ret);
 }
 
-std::unordered_map<std::string, std::string> res_manage::fetch_file_hash_map_from_managed_res(const models::ManageClassPathMap &managed_res,
+models::ClassFileResource res_manage::fetch_file_hash_map_from_managed_res(const models::ManageClassPathMap &managed_res,
     const std::unordered_set<std::string_view> &skip_class_name_set) {
+    models::ClassFileResource ret;
     for (const auto &it : managed_res.managed_class_map) {
         if (skip_class_name_set.find(it.first) != std::cend(skip_class_name_set)) {
             continue;
         }
-        std::vector>
+        models::FileHashMap file_hash_map;
         for (const auto &path : it.second.path_list) {
-
+            decltype(auto) file_hash_list = get_path_file_list(path.c_str());
+            for (const auto &f_it : file_hash_list) {
+                file_hash_map.insert_file_hash(f_it.first, f_it.second);
+            }
         }
+        ret.insert_file_hash_map(it.first, std::move(file_hash_map));
     }
+    return ret;
 }
