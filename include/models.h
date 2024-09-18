@@ -19,12 +19,25 @@ public:
 };
 
 class FileHashMap {
-    std::unordered_map<std::string, const std::string> file_hash_map;
+    std::unordered_map<std::string, const std::string> m_file_hash_map;
 public:
-    FileHashMap(const std::unordered_map<std::string, const std::string> &hash_map): file_hash_map(hash_map) {}
-    FileHashMap(const std::unordered_map<std::string, const std::string> &&hash_map): file_hash_map(hash_map) {}
-    const std::unordered_map<std::string, const std::string>& get_file_hash_map() const {
-        return file_hash_map;
+    FileHashMap(const std::unordered_map<std::string, const std::string> &hash_map): m_file_hash_map(hash_map) {}
+    FileHashMap(const std::unordered_map<std::string, const std::string> &&hash_map): m_file_hash_map(hash_map) {}
+    inline const std::unordered_map<std::string, const std::string>& file_hash_map() const {
+        return m_file_hash_map;
+    }
+    inline FileHashMap& insert_file_hash(const std::string_view &file_name, const std::string_view &hash) {
+        m_file_hash_map.insert({std::string{file_name}, std::string{hash}});
+        return *this;
+    }
+};
+
+class ClassFileResource {
+    std::unordered_map<std::string, FileHashMap> m_class_file_hash_map;
+public:
+    ClassFileResource(const std::unordered_map<std::string, FileHashMap> class_file_hash_map): m_class_file_hash_map(class_file_hash_map) {}
+    inline const std::unordered_map<std::string, FileHashMap>& class_file_hash_map() const {
+        return m_class_file_hash_map;
     }
 };
 

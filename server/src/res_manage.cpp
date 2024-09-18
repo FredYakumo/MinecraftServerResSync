@@ -4,6 +4,7 @@
 #include <string>
 #include <spdlog/spdlog.h>
 #include <fstream>
+#include <vector>
 #include "utils.hpp"
 
 namespace fs = boost::filesystem;
@@ -44,6 +45,9 @@ std::unordered_map<std::string, std::string> res_manage::fetch_file_hash_map_fro
         if (skip_class_name_set.find(it.first) != std::cend(skip_class_name_set)) {
             continue;
         }
-        
+        std::vector>
+        for (const auto &path : it.second.path_list) {
+
+        }
     }
 }
