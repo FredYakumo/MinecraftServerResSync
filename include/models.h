@@ -1,13 +1,51 @@
 #ifndef MANAGE_RES_H
 #define MANAGE_RES_H
 
+#include <algorithm>
 #include <cstdint>
+#include <memory>
+#include <mutex>
+#include <optional>
+#include <shared_mutex>
 #include <string>
 #include <string_view>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 namespace models {
+
+template <typename T> class ShareMutexData {
+  std::shared_ptr<T> data;
+  mutable std::shared_mutex mtx;
+
+public:
+  ShareMutexData() : data(nullptr) {}
+
+  template <typename U>
+  explicit ShareMutexData(U &&data)
+      : data(std::make_shared<T>(std::forward<U>(data))) {}
+
+  inline void set(std::optional<T> d) {
+    std::unique_lock lock(mtx);
+    if (d) {
+      if (!data) {
+        data = std::make_shared<T>(std::move(*d));
+      } else {
+        *data = std::move(*d);
+      }
+    } else {
+      data.reset();
+    }
+  }
+
+  inline const std::shared_ptr<T> get() const {
+    std::shared_mutex lock(mtx);
+    return data;
+  }
+
+  inline T *unsafeGet() { return data ? data.get() : nullptr; }
+};
 
 struct ClassPathList {
   std::vector<std::string> path_list;
@@ -67,14 +105,15 @@ public:
 };
 
 class ServerData {
-  FileHashMap file_hash_map;
+  ShareMutexData<ClassFileResource> class_file_resources;
   uint64_t listen_port;
 
 public:
-  ServerData(const FileHashMap &file_hash_map, uint64_t listen_port)
-      : file_hash_map(file_hash_map), listen_port(listen_port) {}
-  ServerData(const FileHashMap &&file_hash_map, uint64_t listen_port)
-      : file_hash_map(file_hash_map), listen_port(listen_port) {}
+  ServerData() = default;
+  explicit ServerData(ClassFileResource class_file_resource,
+                      uint64_t listen_port)
+      : class_file_resources(std::move(class_file_resource)),
+        listen_port(std::move(listen_port)) {}
 };
 
 } // namespace models
