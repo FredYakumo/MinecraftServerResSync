@@ -1,7 +1,6 @@
-#include "manage_res.h"
 #include "result.h"
 #include "config.h"
-#include "manage_res.h"
+#include "models.h"
 #include "utils.hpp"
 #include <yaml-cpp/exceptions.h>
 #include <fstream>

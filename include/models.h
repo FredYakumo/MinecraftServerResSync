@@ -1,6 +1,7 @@
 #ifndef MANAGE_RES_H
 #define MANAGE_RES_H
 
+#include <cstdint>
 #include <string>
 #include <string_view>
 #include <unordered_map>
