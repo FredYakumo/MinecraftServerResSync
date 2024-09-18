@@ -7,8 +7,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(PROJECT_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 set(PROJECT_EXTERNAL ${PROJECT_ROOT}/external)
 
-cmake_policy(SET CMP0167 NEW)
-
+find_package(fmt REQUIRED)
 find_package(Boost 1.85.0 REQUIRED COMPONENTS json thread chrono filesystem)
 # set(YAML_CPP_LIBRARY_DIR ${PROJECT_EXTERNAL}/yaml-cpp/build)
 # set(yaml-cpp_DIR ${PROJECT_EXTERNAL}/yaml-cpp/build)
@@ -27,9 +26,9 @@ find_package(yaml-cpp REQUIRED)
 
 
 include_directories(${PROJECT_ROOT}/include)
-include_directories(${PROJECT_EXTERNAL}/spdlog/include)
-include_directories(${PROJECT_EXTERNAL}/yaml-cpp/include)
-include_directories(${Boost_INCLUDE_DIRS})
+# include_directories(${PROJECT_EXTERNAL}/spdlog/include)
+# include_directories(${PROJECT_EXTERNAL}/yaml-cpp/include)
+# include_directories(${Boost_INCLUDE_DIRS})
 
 add_subdirectory(client)
 add_subdirectory(server)

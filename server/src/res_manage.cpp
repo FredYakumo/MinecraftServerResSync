@@ -37,7 +37,7 @@ std::unordered_map<std::string, std::string> res_manage::get_path_file_list(cons
         }
     }
 
-    return std::move(ret);
+    return ret;
 }
 
 models::ClassFileResource res_manage::fetch_file_hash_map_from_managed_res(const models::ManageClassPathMap &managed_res,

@@ -6,7 +6,6 @@
 #include <memory>
 #include <spdlog/spdlog.h>
 #include <boost/beast.hpp>
-#include <boost/program_options.hpp>
 #include <shared_mutex>
 #include <string_view>
 #include <unordered_map>
@@ -26,15 +25,12 @@ void process_config_file(const char *config_path) {
     models::ManageClassPathMap manage_res {};
     load_config_from_yaml_file(config_path, manage_res);
     g_manage_class_path_map.set(manage_res);
-    g_server_data.set(models::ServerData {
-        Cla
-    })
     // lock.unlock();
 }
 
 void init_manage_res_hash(const models::ManageClassPathMap &managed_class_path_map) {
     auto class_file_hash = res_manage::fetch_file_hash_map_from_managed_res(managed_class_path_map, {"unused"});
-    g_server_data.set(models::ServerData {})
+    
 }
 
 int main(int argc, char *argv[]) {

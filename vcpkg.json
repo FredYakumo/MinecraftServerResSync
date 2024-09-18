@@ -1,0 +1,17 @@
+{
+  "dependencies": [
+    "fmt",
+    "boost-thread",
+    "boost-chrono",
+    "boost-optional",
+    "boost-json",
+    "boost-beast",
+    "boost-format",
+    "boost-filesystem",
+    "spdlog",
+    "yaml-cpp",
+    "openssl",
+    "catch2"
+  ],
+  "builtin-baseline": "6f1ddd6b6878e7e66fcc35c65ba1d8feec2e01f8"
+}

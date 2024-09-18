@@ -40,7 +40,7 @@ public:
   }
 
   inline const std::shared_ptr<T> get() const {
-    std::shared_mutex lock(mtx);
+    std::shared_lock<std::shared_mutex> lock(mtx);
     return data;
   }
 
