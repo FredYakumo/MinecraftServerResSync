@@ -25,17 +25,6 @@ ShareMutexData<std::shared_ptr<ManageClassPathMap>> g_manage_class_path_map{
     nullptr};
 ShareMutexData<std::shared_ptr<ServerData>> g_server_data{nullptr};
 
-void process_config_file(const char *config_path) {
-  ManageClassPathMap manage_res{};
-  load_config_from_yaml_file(config_path, manage_res);
-
-  g_manage_class_path_map.set(std::make_shared<ManageClassPathMap>(manage_res));
-
-  uint16_t port = 25576;
-
-  g_server_data.set(std::make_shared<ServerData>(nullptr, port));
-}
-
 void init_manage_res_hash() {
   const auto class_file_hash = res_manage::fetch_file_hash_map_from_managed_res(
       *g_manage_class_path_map.get_const(), {"unused"});
@@ -46,6 +35,6 @@ int main(int argc, char *argv[]) {
   spdlog::set_level(spdlog::level::debug);
 
   info("Start Server");
-  process_config_file("config.yaml");
+  init_server_data_from_config_yaml_file("config.yaml");
   init_manage_res_hash();
 }

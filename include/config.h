@@ -4,6 +4,6 @@
 #include "result.h"
 #include "models.h"
 
-result::Result load_config_from_yaml_file(const char *file_path, models::ManageClassPathMap &out_manage_res);
+result::Result init_server_data_from_config_yaml_file(const char *file_path);
 
 #endif
