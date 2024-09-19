@@ -25,6 +25,8 @@ public:
   // ~MutData() { lock.unlock(); }
 
   explicit operator T &() { return data; }
+
+  T & get() { return data; }
 };
 
 template <typename T> class ShareMutexData {
