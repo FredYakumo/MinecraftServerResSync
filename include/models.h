@@ -15,36 +15,41 @@
 
 namespace models {
 
+template <typename T> class MutData {
+  T &data;
+  std::unique_lock<std::shared_mutex> lock;
+
+public:
+  MutData(T &data, std::shared_mutex &mtx) : data(data), lock(mtx) {}
+
+  // ~MutData() { lock.unlock(); }
+
+  explicit operator T &() { return data; }
+};
+
 template <typename T> class ShareMutexData {
-  std::shared_ptr<T> data;
+  T data;
   mutable std::shared_mutex mtx;
 
 public:
-  ShareMutexData() : data(nullptr) {}
+  explicit ShareMutexData(T data) noexcept : data(std::move(data)) {}
 
   template <typename U>
-  explicit ShareMutexData(U &&data)
-      : data(std::make_shared<T>(std::forward<U>(data))) {}
+  explicit ShareMutexData(U &&data) noexcept : data(std::forward<U>(data)) {}
 
-  inline void set(std::optional<T> d) {
+  void set(T d) {
     std::unique_lock lock(mtx);
-    if (d) {
-      if (!data) {
-        data = std::make_shared<T>(std::move(*d));
-      } else {
-        *data = std::move(*d);
-      }
-    } else {
-      data.reset();
-    }
+    data = std::move(d);
   }
 
-  inline const std::shared_ptr<T> get() const {
-    std::shared_lock<std::shared_mutex> lock(mtx);
+  const T &get_const() const {
+    std::shared_lock lock(mtx);
     return data;
   }
 
-  inline T *unsafeGet() { return data ? data.get() : nullptr; }
+  MutData<T> get_mut() { return MutData(data, mtx); }
+
+  T &unsafeGet() noexcept { return data; }
 };
 
 struct ClassPathList {
@@ -62,8 +67,8 @@ class FileHashMap {
 public:
   FileHashMap() = default;
 
-  explicit FileHashMap(
-      std::unordered_map<std::string, const std::string> hash_map)
+  explicit
+  FileHashMap(std::unordered_map<std::string, const std::string> hash_map)
       : m_file_hash_map(std::move(hash_map)) {}
 
   // FileHashMap(const std::unordered_map<std::string, const std::string>
@@ -105,15 +110,19 @@ public:
 };
 
 class ServerData {
-  ShareMutexData<ClassFileResource> class_file_resources;
-  uint64_t listen_port;
+  ShareMutexData<ClassFileResource> m_class_file_resources;
+  uint64_t listen_port{};
 
 public:
   ServerData() = default;
   explicit ServerData(ClassFileResource class_file_resource,
                       uint64_t listen_port)
-      : class_file_resources(std::move(class_file_resource)),
-        listen_port(std::move(listen_port)) {}
+      : m_class_file_resources(std::move(class_file_resource)),
+        listen_port(listen_port) {}
+  ServerData &set_class_file_resources(ClassFileResource class_file_resource) {
+    m_class_file_resources.set(std::move(class_file_resource));
+    return *this;
+  }
 };
 
 } // namespace models
