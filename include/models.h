@@ -110,17 +110,28 @@ public:
 };
 
 class ServerData {
-  ShareMutexData<ClassFileResource> m_class_file_resources;
+  std::shared_ptr<ShareMutexData<ClassFileResource>> m_class_file_resources{
+      nullptr};
   uint64_t listen_port{};
 
 public:
   ServerData() = default;
-  explicit ServerData(ClassFileResource class_file_resource,
-                      uint64_t listen_port)
+  explicit ServerData(
+      std::shared_ptr<ShareMutexData<ClassFileResource>> class_file_resource,
+      uint64_t listen_port)
       : m_class_file_resources(std::move(class_file_resource)),
         listen_port(listen_port) {}
-  ServerData &set_class_file_resources(ClassFileResource class_file_resource) {
-    m_class_file_resources.set(std::move(class_file_resource));
+  explicit ServerData(ClassFileResource class_file_resource,
+                      uint64_t listen_port)
+      : m_class_file_resources(
+            std::make_shared<ShareMutexData<ClassFileResource>>(
+                std::move(class_file_resource))),
+        listen_port(listen_port) {}
+  ServerData &
+  set_class_file_resources(const ClassFileResource &class_file_resource) {
+    m_class_file_resources =
+        std::make_shared<ShareMutexData<ClassFileResource>>(
+            class_file_resource);
     return *this;
   }
 };

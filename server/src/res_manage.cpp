@@ -24,8 +24,8 @@ std::unordered_map<std::string, std::string> res_manage::get_path_file_list(cons
             const auto &p = entry.path().string();
             debug("Look up file path: {0}", p);
             auto path_list = get_path_file_list(p.c_str());
-            for (const auto &it : path_list) {
-                ret.insert({std::move(it.first), std::move(it.second)});
+            for (const auto & [fst, snd] : path_list) {
+                ret.insert({fst, snd});
             }
         }
         else {
@@ -54,7 +54,7 @@ models::ClassFileResource res_manage::fetch_file_hash_map_from_managed_res(const
                 file_hash_map.insert_file_hash(f_it.first, f_it.second);
             }
         }
-        ret.insert_file_hash_map(it.first, std::move(file_hash_map));
+        ret.insert_file_hash_map(it.first, file_hash_map);
     }
     return ret;
 }

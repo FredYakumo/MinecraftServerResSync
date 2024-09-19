@@ -3,10 +3,11 @@ project(ServerResourceSync)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CXX_STANDARD 17)
+set(CXX_STANDARD_REQUIRED True)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(PROJECT_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 set(PROJECT_EXTERNAL ${PROJECT_ROOT}/external)
-
 find_package(Boost 1.85.0 REQUIRED COMPONENTS json thread chrono filesystem)
 # set(YAML_CPP_LIBRARY_DIR ${PROJECT_EXTERNAL}/yaml-cpp/build)
 # set(yaml-cpp_DIR ${PROJECT_EXTERNAL}/yaml-cpp/build)

@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
+#include <string_view>
 #include "models.h"
 
 namespace res_manage {

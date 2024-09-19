@@ -18,19 +18,18 @@ using spdlog::debug;
 using spdlog::error;
 
 
-models::ShareMutexData<models::ManageClassPathMap> g_manage_class_path_map;
-models::ShareMutexData<models::ServerData> g_server_data;
+std::shared_ptr<models::ShareMutexData<models::ManageClassPathMap>> g_manage_class_path_map {nullptr};
+std::shared_ptr<models::ShareMutexData<models::ServerData>> g_server_data {nullptr};
 
 void process_config_file(const char *config_path) {
     models::ManageClassPathMap manage_res {};
     load_config_from_yaml_file(config_path, manage_res);
-    g_manage_class_path_map.set(manage_res);
-    // lock.unlock();
+    g_manage_class_path_map = std::make_shared<models::ShareMutexData<models::ManageClassPathMap>>(manage_res);
 }
 
 void init_manage_res_hash(const models::ManageClassPathMap &managed_class_path_map) {
-    auto class_file_hash = res_manage::fetch_file_hash_map_from_managed_res(managed_class_path_map, {"unused"});
-    
+  const auto class_file_hash = res_manage::fetch_file_hash_map_from_managed_res(managed_class_path_map, {"unused"});
+    g_server_data = std::make_shared<models::ShareMutexData<models::ServerData>>(models::ServerData{class_file_hash, 25678});
 }
 
 int main(int argc, char *argv[]) {
@@ -38,5 +37,5 @@ int main(int argc, char *argv[]) {
 
     info("Start Server");
     process_config_file("config.yaml");
-    init_manage_res_hash(*g_manage_class_path_map.get());
+    init_manage_res_hash(g_manage_class_path_map->get_const());
 }
