@@ -5,6 +5,7 @@
 #include "spdlog/common.h"
 #include <boost/beast.hpp>
 #include <cstdint>
+#include <http_service.h>
 #include <iostream>
 #include <memory>
 #include <mutex>
@@ -37,4 +38,6 @@ int main(int argc, char *argv[]) {
   info("Start Server");
   init_server_data_from_config_yaml_file("config.yaml");
   init_manage_res_hash();
+
+  http_service::start_service("0.0.0.0", g_server_data.get_const()->listen_port());
 }

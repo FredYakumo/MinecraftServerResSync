@@ -114,7 +114,7 @@ public:
 class ServerData {
   std::shared_ptr<ShareMutexData<ClassFileResource>> m_class_file_resources{
       nullptr};
-  uint64_t listen_port{};
+  uint64_t m_listen_port{};
 
 public:
   ServerData() = default;
@@ -122,13 +122,13 @@ public:
       std::shared_ptr<ShareMutexData<ClassFileResource>> class_file_resource,
       uint64_t listen_port)
       : m_class_file_resources(std::move(class_file_resource)),
-        listen_port(listen_port) {}
+        m_listen_port(listen_port) {}
   explicit ServerData(ClassFileResource class_file_resource,
                       uint64_t listen_port)
       : m_class_file_resources(
             std::make_shared<ShareMutexData<ClassFileResource>>(
                 std::move(class_file_resource))),
-        listen_port(listen_port) {}
+        m_listen_port(listen_port) {}
   ServerData &
   set_class_file_resources(const ClassFileResource &class_file_resource) {
     m_class_file_resources =
@@ -136,6 +136,8 @@ public:
             class_file_resource);
     return *this;
   }
+
+  uint64_t listen_port() const { return m_listen_port; }
 };
 
 } // namespace models
