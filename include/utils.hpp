@@ -3,11 +3,11 @@
 
 #include <cstring>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <openssl/sha.h>
 #include <sstream>
 #include <sys/types.h>
-#include <iomanip>
 
 namespace utils {
 inline std::string read_to_end(std::ifstream &fs) {
@@ -22,9 +22,9 @@ inline std::string calculate_str_sha1(const char *origin) {
 
   SHA1(reinterpret_cast<const unsigned char *>(origin), strlen(origin), hash);
   std::stringstream ss;
-  for (size_t i = 0; i < SHA_DIGEST_LENGTH; ++i) {
+  for (const unsigned char i : hash) {
     ss << std::hex << std::setw(2) << std::setfill('0')
-       << static_cast<uint32_t>(hash[i]);
+       << static_cast<uint32_t>(i);
   }
   return ss.str();
 }

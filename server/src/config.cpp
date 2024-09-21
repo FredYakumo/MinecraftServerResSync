@@ -23,7 +23,7 @@ result::Result init_class_file_path(const YAML::Node &node) {
 
     std::string single_path{};
     try {
-      if (auto ps{path.as<std::string>()}; ps.size() > 0) {
+      if (auto ps{path.as<std::string>()}; !ps.empty()) {
         spdlog::debug("path(single): {0}", ps);
         cs.path_list.push_back(std::move(ps));
       } else {
@@ -33,9 +33,9 @@ result::Result init_class_file_path(const YAML::Node &node) {
           cs.path_list.push_back(std::move(ps_obj));
         }
       }
-    } catch (YAML::Exception e) {
+    } catch ([[maybe_unused]] YAML::Exception& e) {
       for (auto path_it : path) {
-        std::string ps_obj = path_it.as<std::string>();
+        auto ps_obj = path_it.as<std::string>();
         spdlog::debug("path: {0}", ps_obj);
         cs.path_list.push_back(std::move(ps_obj));
       }

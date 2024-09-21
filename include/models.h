@@ -78,11 +78,11 @@ public:
   // std::unordered_map<std::string, const std::string> &&hash_map):
   // m_file_hash_map(hash_map) {}
 
-  inline const std::unordered_map<std::string, const std::string> &
+  [[nodiscard]] inline const std::unordered_map<std::string, const std::string> &
   file_hash_map() const {
     return m_file_hash_map;
   }
-  inline FileHashMap &insert_file_hash(std::string_view file_name,
+  FileHashMap &insert_file_hash(std::string_view file_name,
                                        std::string_view hash) {
     m_file_hash_map.emplace(file_name, hash);
     return *this;
@@ -99,7 +99,7 @@ public:
       : m_class_file_hash_map(std::move(class_file_hash_map)) {}
   // ClassFileResource(const std::unordered_map<std::string, FileHashMap>
   // class_file_hash_map): m_class_file_hash_map(class_file_hash_map) {}
-  inline const std::unordered_map<std::string, FileHashMap> &
+  [[nodiscard]] inline const std::unordered_map<std::string, FileHashMap> &
   class_file_hash_map() const {
     return m_class_file_hash_map;
   }
@@ -137,7 +137,7 @@ public:
     return *this;
   }
 
-  uint64_t listen_port() const { return m_listen_port; }
+  [[nodiscard]] uint64_t listen_port() const { return m_listen_port; }
 };
 
 } // namespace models

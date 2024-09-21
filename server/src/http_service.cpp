@@ -30,7 +30,7 @@ private:
     void read_request() {
 
         auto self = shared_from_this();
-        http::async_read(m_socket, buffer, req,
+        async_read(m_socket, buffer, req,
             [self](beast::error_code ec, std::size_t bytes_transferred) {
                 boost::ignore_unused(bytes_transferred);
                 if (!ec) {
@@ -42,7 +42,7 @@ private:
     void handle_request() {
 
         http::response<string_body> res{http::status::ok, req.version()};
-        res.set(http::field::server, "Boost.Beast");
+        res.set(http::field::server, "Minecraft");
         res.set(http::field::content_type, "text/html");
         res.keep_alive(req.keep_alive());
         res.body() = "Hello, World!";
@@ -63,17 +63,17 @@ private:
 
 // Listener class to accept incoming connections
 class Listener : public std::enable_shared_from_this<Listener> {
-    tcp::acceptor acceptor_;
-    tcp::socket socket_;
+    tcp::acceptor m_acceptor;
+    tcp::socket m_socket;
 
 public:
     Listener(net::io_context& ioc, tcp::endpoint endpoint)
-        : acceptor_(ioc), socket_(ioc) {
+        : m_acceptor(ioc), m_socket(ioc) {
 
-        acceptor_.open(endpoint.protocol());
-        acceptor_.set_option(net::socket_base::reuse_address(true));
-        acceptor_.bind(endpoint);
-        acceptor_.listen(net::socket_base::max_listen_connections);
+        m_acceptor.open(endpoint.protocol());
+        m_acceptor.set_option(net::socket_base::reuse_address(true));
+        m_acceptor.bind(endpoint);
+        m_acceptor.listen(net::socket_base::max_listen_connections);
 
 
         do_accept();
@@ -81,11 +81,11 @@ public:
 
 private:
     void do_accept() {
-        acceptor_.async_accept(socket_,
+        m_acceptor.async_accept(m_socket,
             [self = shared_from_this()](beast::error_code ec) {
                 if (!ec) {
 
-                    std::make_shared<Session>(std::move(self->socket_))->start();
+                    std::make_shared<Session>(std::move(self->m_socket))->start();
                 }
 
 
