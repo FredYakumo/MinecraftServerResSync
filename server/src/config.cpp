@@ -69,8 +69,9 @@ result::Result init_server_data_from_config_yaml_file(const char *file_path) {
   }
 
   uint64_t port = !config["port"] ? 25576 : config["port"].as<uint64_t>();
+  int thread_count = !config["thread_count"] ? 4 : config["thread_count"].as<int>();
 
-  g_server_data.set(std::make_shared<models::ServerData>(nullptr, port));
+  g_server_data.set(std::make_shared<models::ServerData>(nullptr, port, thread_count));
 
   return result::Success;
 }

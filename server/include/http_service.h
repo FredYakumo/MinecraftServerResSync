@@ -4,10 +4,12 @@
 
 #include "result.h"
 #include <cstdint>
+#include <string>
+#include <string_view>
 
 
 namespace http_service {
-    result::Result start_service(const char *host_address, uint16_t port);
+    result::Result start_service(const std::string_view host_address, uint16_t port, int threads_count);
 }
 
 #endif
