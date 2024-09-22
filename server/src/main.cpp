@@ -1,26 +1,41 @@
-#include "spdlog/common.h"
-#include <cstdint>
-#include <iostream>
-#include <mutex>
-#include <shared_mutex>
-#include <spdlog/spdlog.h>
-#include <boost/beast.hpp>
-#include <boost/program_options.hpp>
-#include "manage_res.h"
+#include "main.h"
 #include "config.h"
+#include "models.h"
+#include "res_manage.h"
+#include "spdlog/common.h"
+#include <http_service.h>
+#include <memory>
+#include <spdlog/spdlog.h>
+#include <string_view>
 
-using spdlog::info;
 using spdlog::debug;
 using spdlog::error;
+using spdlog::info;
 
-auto global_managed_res_mtx = std::make_shared<std::mutex>();
-auto global_managed_res_data = std::make_shared<models::ManageResource>();
+using models::ManageClassPathMap;
+using models::ServerData;
+using models::ShareMutexData;
 
-int main(int argc, char *argv[]) {
+ShareMutexData<std::shared_ptr<ManageClassPathMap>> g_manage_class_path_map{
+    nullptr
+};
+ShareMutexData<std::shared_ptr<ServerData>> g_server_data{nullptr};
+
+void init_manage_res_hash()
+{
+    const auto class_file_hash = res_manage::fetch_file_hash_map_from_managed_res(
+        *g_manage_class_path_map.get_const(), {"unused"});
+    g_server_data.get_mut().get()->set_class_file_resources(class_file_hash);
+}
+
+int main(int argc, char* argv[])
+{
     spdlog::set_level(spdlog::level::debug);
 
     info("Start Server");
-    
-    models::ManageResource manage_res {};
-    load_config_from_yaml_file("config.yaml", manage_res);
+    init_server_data_from_config_yaml_file("config.yaml");
+    init_manage_res_hash();
+
+    http_service::start_service("0.0.0.0", g_server_data.get_const()->listen_port(),
+                                g_server_data.get_const()->thread_count());
 }

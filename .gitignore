@@ -1,3 +1,5 @@
 build/
 .cache/
 **/.cache/
+/.vs
+cmake-build-debug/

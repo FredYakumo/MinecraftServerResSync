@@ -5,7 +5,16 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${env:VCPKG_ROOT}/installed/x64-windows/include/**",
-                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.22621.0/shared/**"
+                "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.41.34120/include/**",
+                "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.41.34120/ATLMFC/include/**",
+                "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Auxiliary/VS/include/**",
+                "C:/Program Files (x86)/Windows Kits/10/include/10.0.22621.0/ucrt/**",
+                "C:/Program Files (x86)/Windows Kits/10//include/10.0.22621.0//um/**",
+                "C:/Program Files (x86)/Windows Kits/10//include/10.0.22621.0//shared/**",
+                "C:/Program Files (x86)/Windows Kits/10//include/10.0.22621.0//winrt/**",
+                "C:/Program Files (x86)/Windows Kits/10//include/10.0.22621.0//cppwinrt/**",
+                "C:/Program Files (x86)/Windows Kits/NETFXSDK/4.8/include/um/**",
+                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.22621.0/ucrt/**"
             ],
             "defines": [
                 "_DEBUG",
@@ -13,7 +22,6 @@
                 "_UNICODE"
             ],
             "windowsSdkVersion": "10.0.22621.0",
-            "compilerPath": "C:/Program Files/LLVM/bin/clang++.exe",
             "cStandard": "c17",
             "cppStandard": "c++17",
             "intelliSenseMode": "clang-x64",

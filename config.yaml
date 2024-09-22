@@ -5,7 +5,6 @@ outbound_speed_limit_kb: 255
 res:
   - class_name: "main"
     path:
-        - "path/to/file_list"
-        - "path/to/another/file_list"
+        - "."
   - class_name: "unused"
     path: "path/to/no_used"
