@@ -189,7 +189,8 @@ namespace models
     struct Api
     {
         boost::beast::http::verb method;
-        std::function<std::string(boost::beast::http::request<boost::beast::http::string_body>)> api_function;
+        std::function<void(boost::beast::http::request<boost::beast::http::string_body>,
+                                boost::beast::http::response<boost::beast::http::string_body> &)> api_function;
     };
 
 } // namespace models
