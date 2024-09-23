@@ -68,7 +68,7 @@ namespace http_service {
                 }
 
                 // keep listening
-                // do_accept();
+                do_accept();
             });
     }
 
