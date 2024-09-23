@@ -151,7 +151,9 @@ public:
                 class_file_resource);
         return *this;
     }
-
+    [[nodiscard]] const ClassFileResource * const class_file_resource() {
+        return !m_class_file_resources ? nullptr : &m_class_file_resources->get_const();
+    }
     [[nodiscard]] uint64_t listen_port() const { return m_listen_port; }
     [[nodiscard]] uint16_t thread_count() const { return m_thread_count; }
     [[nodiscard]] const std::string_view host() const { return m_host; }
@@ -160,7 +162,7 @@ public:
 struct Api {
     boost::beast::http::verb method;
     std::function<void(
-        boost::beast::http::request<boost::beast::http::string_body>,
+        const boost::beast::http::request<boost::beast::http::string_body> &,
         boost::beast::http::response<boost::beast::http::string_body> &)>
         api_function;
 };
