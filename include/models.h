@@ -151,25 +151,27 @@ namespace models
         };
         uint64_t m_listen_port{};
         uint16_t m_thread_count{4};
+        std::string m_host;
 
     public:
         ServerData() = default;
 
         explicit ServerData(
             std::shared_ptr<ShareMutexData<ClassFileResource>> class_file_resource,
-            const uint64_t listen_port, const uint16_t thread_count = 4)
+            const std::string_view host, const uint64_t listen_port, const uint16_t thread_count = 4)
             : m_class_file_resources(std::move(class_file_resource)),
-              m_listen_port(listen_port), m_thread_count(thread_count)
+              m_host(host), m_listen_port(listen_port), m_thread_count(thread_count)
         {
         }
 
         explicit ServerData(ClassFileResource class_file_resource,
+                            const std::string_view host,
                             const uint64_t listen_port,
                             const uint16_t thread_count = 4)
             : m_class_file_resources(
                   std::make_shared<ShareMutexData<ClassFileResource>>(
                       std::move(class_file_resource))),
-              m_listen_port(listen_port), m_thread_count(thread_count)
+              m_host(host), m_listen_port(listen_port), m_thread_count(thread_count)
         {
         }
 
@@ -184,6 +186,7 @@ namespace models
 
         [[nodiscard]] uint64_t listen_port() const { return m_listen_port; }
         [[nodiscard]] uint16_t thread_count() const { return m_thread_count; }
+        [[nodiscard]] const std::string_view host() const { return m_host; }
     };
 
     struct Api

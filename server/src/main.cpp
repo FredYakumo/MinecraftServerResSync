@@ -36,6 +36,6 @@ int main(int argc, char* argv[])
     init_server_data_from_config_yaml_file("config.yaml");
     init_manage_res_hash();
 
-    http_service::start_service("0.0.0.0", g_server_data.get_const()->listen_port(),
+    http_service::start_service(g_server_data.get_const()->host() , g_server_data.get_const()->listen_port(),
                                 g_server_data.get_const()->thread_count());
 }
