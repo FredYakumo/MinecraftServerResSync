@@ -26,3 +26,13 @@ res:
 ```shell
 ./server/server -c config.yaml
 ```
+
+# How does server work
+When server starts, server load resources class list and others configuration from config settings, and calculates all resources hash value(sha1) then stored in memory.
+with api: /getResourceList, return all resource classes information.
+with websocket api: /fetchRes, client send data with `SyncData` protocol to server, server answer with same protocol data.
+`SyncData` protocol contains the informations about:
+- estimated file list, and hash
+- global progress
+- current file
+- data block
