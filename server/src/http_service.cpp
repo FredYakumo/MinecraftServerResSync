@@ -1,5 +1,8 @@
 #include "http_service.h"
 #include "components.h"
+#include <boost/beast/websocket.hpp>
+#include <boost/asio.hpp>
+#include <utility>
 
 namespace http_service {
     namespace beast = boost::beast;   // from <boost/beast.hpp>
@@ -43,6 +46,7 @@ namespace http_service {
             res.body() = "404: Not Found";
             res.prepare_payload();
         }
+
         do_write(std::move(res));
     }
 
@@ -59,11 +63,44 @@ namespace http_service {
                           });
     }
 
+    void WebSocketSession::send_number() {
+        if (m_disconnected) {
+            spdlog::info("Aborted");
+            return;
+        }
+        auto self = shared_from_this();
+        m_counter.get_mut().get() += 1;
+        std::string d_str = std::to_string(m_counter.get_const());
+        const auto mutable_buffers = m_buffer.prepare(d_str.size());
+        std::memcpy(mutable_buffers.data(), d_str.data(), d_str.size());
+        m_buffer.commit(d_str.size());
+        m_ws.async_write(m_buffer.data(),
+            [self](beast::error_code ec, std::size_t /*bytes_transferred*/) {
+                if (ec) {
+                    spdlog::error("Error sending number:  {}", ec.message());
+                    self->m_disconnected = true;
+                    self->m_timer.cancel();
+                }
+            });
+        m_buffer.clear();
+
+        spdlog::info("Send number: {}", m_counter.get_const());
+
+        m_timer.expires_after(std::chrono::seconds(1));
+        m_timer.async_wait([self](beast::error_code ec) {
+            if (!ec) {
+                self->send_number();
+            }
+        });
+    }
+
     void HttpServer::do_accept() {
         m_acceptor.async_accept(
             [this](beast::error_code ec, tcp::socket socket) {
                 if (!ec) {
-                    std::make_shared<Session>(std::move(socket), m_bind_apis)
+                    // std::make_shared<Session>(std::move(socket), m_bind_apis)
+                    //     ->start();
+                    std::make_shared<WebSocketSession>(std::move(socket), m_ioc)
                         ->start();
                 }
 
@@ -93,7 +130,7 @@ namespace http_service {
 
             server.register_api(
                 "/test",
-                models::Api{beast::http::verb::get,
+                models::Api{http::verb::get,
                             [](const http::request<http::string_body> &,
                                http::response<http::string_body> &res) {
                                 write_json_result(

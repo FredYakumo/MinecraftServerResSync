@@ -8,6 +8,7 @@
     "boost-beast",
     "boost-format",
     "boost-filesystem",
+    "boost-system",
     "spdlog",
     "yaml-cpp",
     "openssl",

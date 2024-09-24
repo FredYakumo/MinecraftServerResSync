@@ -2,13 +2,13 @@
 #define HTTP_SERVICE_H
 
 #include "result.h"
-#include <algorithm>
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
 #include <boost/beast/http/message.hpp>
 #include <boost/beast/http/status.hpp>
 #include <boost/beast/http/string_body.hpp>
 #include <boost/beast/http/verb.hpp>
+#include <boost/beast/websocket.hpp>
 #include <boost/format.hpp>
 #include <boost/format/format_fwd.hpp>
 #include <boost/json.hpp>
@@ -27,9 +27,10 @@
 #include <vector>
 
 namespace http_service {
-    namespace beast = boost::beast;   // from <boost/beast.hpp>
-    namespace http = beast::http;     // from <boost/beast/http.hpp>
-    namespace net = boost::asio;      // from <boost/asio.hpp>
+    namespace beast = boost::beast; // from <boost/beast.hpp>
+    namespace http = beast::http;   // from <boost/beast/http.hpp>
+    namespace net = boost::asio;    // from <boost/asio.hpp>
+    namespace websocket = beast::websocket;
     using tcp = boost::asio::ip::tcp; // from <boost/asio/ip/tcp.hpp>
 
     inline std::string thread_id_to_string(const boost::thread::id &thread_id) {
@@ -40,9 +41,9 @@ namespace http_service {
 
     class Session : public std::enable_shared_from_this<Session> {
     public:
-        explicit Session(
-            tcp::socket socket,
-            const std::unordered_map<std::string, models::Api> &bind_apis)
+        explicit
+        Session(tcp::socket socket,
+                const std::unordered_map<std::string, models::Api> &bind_apis)
             : m_socket(std::move(socket)), m_bind_apis(bind_apis) {}
 
         void start() { do_read(); }
@@ -58,6 +59,82 @@ namespace http_service {
         beast::flat_buffer m_buffer;
         http::request<http::string_body> m_req;
         const std::unordered_map<std::string, models::Api> &m_bind_apis;
+    };
+
+    class WebSocketSession
+        : public std::enable_shared_from_this<WebSocketSession> {
+    public:
+        explicit WebSocketSession(tcp::socket socket, net::io_context &io_context)
+            : m_ws(std::move(socket)), m_timer(io_context) {}
+
+        void start() { do_accept(); }
+
+    private:
+        void do_accept() {
+            m_ws.async_accept(std::bind(&WebSocketSession::on_accept,
+                                        shared_from_this(),
+                                        std::placeholders::_1));
+
+        }
+
+        void on_accept(beast::error_code ec) {
+            if (ec) {
+                spdlog::error("Error on accept: {}", ec.message());
+                return;
+            }
+            // send_message("Hello world");
+            // do_read();
+            send_number();
+        }
+
+        void do_read() {
+            m_ws.async_read(m_buffer, [self = shared_from_this()](
+                                          beast::error_code ec,
+                                          std::size_t bytes_transferred) {
+                self->on_read(ec, bytes_transferred);
+            });
+        }
+
+        void on_read(const beast::error_code &ec,
+                     std::size_t bytes_transferred) {
+            if (ec) {
+                spdlog::error("Error on read: {}", ec.message());
+                return;
+            }
+
+            m_ws.async_write(
+                m_buffer.data(),
+                std::bind(&WebSocketSession::on_write, shared_from_this(),
+                          std::placeholders::_1, std::placeholders::_2));
+        }
+
+        void on_write(const beast::error_code &ec,
+                      std::size_t /*bytes_transferred*/) {
+            if (ec) {
+                spdlog::error("Error on write: {}", ec.message());
+                return;
+            }
+            m_buffer.clear();
+            do_read();
+        }
+
+        void send_number();
+
+        void send_message(const std::string &message) {
+            m_ws.async_write(
+                net::buffer(message), [](const beast::error_code &ec,
+                                         std::size_t /*bytes_transferred*/) {
+                    if (ec)
+                        spdlog::error("Error on sending message: {}",
+                                      ec.message());
+                });
+        }
+
+        models::ShareMutexData<int> m_counter { 0 };
+        websocket::stream<tcp::socket> m_ws;
+        beast::flat_buffer m_buffer;
+        net::steady_timer m_timer;
+        bool m_disconnected = false;
     };
 
     class HttpServer {
@@ -94,13 +171,13 @@ namespace http_service {
                                   http::response<http::string_body> &out_res) {
         out_res.result(http::status::ok);
         out_res.set(http::field::content_type, "application/json");
-        out_res.body() = boost::json::serialize(std::move(json));
+        out_res.body() = serialize(json);
 
         out_res.prepare_payload();
     }
 
-    result::Result start_service(const std::string_view host_address,
-                                 uint16_t port, int threads_count);
+    result::Result start_service(std::string_view host_address, uint16_t port,
+                                 int threads_count);
 } // namespace http_service
 
 #endif
