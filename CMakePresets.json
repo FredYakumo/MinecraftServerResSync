@@ -47,9 +47,7 @@
         "CMAKE_C_COMPILER": "gcc",
         "CMAKE_CXX_COMPILER": "g++",
         "CMAKE_C_STANDARD": "17",
-        "CMAKE_CXX_STANDARD": "17",
-        "spdlog_DIR": "${sourceDir}/external/spdlog/build",
-        "yaml-cpp_DIR": "${sourceDir}/external/yaml-cpp/build"
+        "CMAKE_CXX_STANDARD": "17"
       }
     },
     {
