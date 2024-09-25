@@ -9,7 +9,7 @@ set(PROJECT_EXTERNAL ${PROJECT_ROOT}/external)
 find_package(Boost 1.85.0 REQUIRED COMPONENTS json thread chrono filesystem beast system)
 # set(YAML_CPP_LIBRARY_DIR ${PROJECT_EXTERNAL}/yaml-cpp/build)
 # set(yaml-cpp_DIR ${PROJECT_EXTERNAL}/yaml-cpp/build)
-# find_package(spdlog REQUIRED)
+find_package(spdlog REQUIRED)
 find_package(OpenSSL REQUIRED)
 find_package(yaml-cpp REQUIRED)
 
@@ -24,7 +24,7 @@ find_package(yaml-cpp REQUIRED)
 
 
 include_directories(${PROJECT_ROOT}/include)
-include_directories(${PROJECT_EXTERNAL}/spdlog/include)
+# include_directories(${PROJECT_EXTERNAL}/spdlog/include)
 # include_directories(${PROJECT_EXTERNAL}/yaml-cpp/include)
 # include_directories(${Boost_INCLUDE_DIRS})
 
