@@ -1,8 +1,7 @@
 #include "http_service.h"
 #include "components.h"
-#include <boost/asio.hpp>
 #include <boost/beast/websocket.hpp>
-#include <memory>
+#include <boost/asio.hpp>
 #include <utility>
 
 namespace http_service {
@@ -75,8 +74,7 @@ namespace http_service {
         const auto mutable_buffers = m_buffer.prepare(d_str.size());
         std::memcpy(mutable_buffers.data(), d_str.data(), d_str.size());
         m_buffer.commit(d_str.size());
-        m_ws.async_write(
-            m_buffer.data(),
+        m_ws.async_write(m_buffer.data(),
             [self](beast::error_code ec, std::size_t /*bytes_transferred*/) {
                 if (ec) {
                     spdlog::error("Error sending number:  {}", ec.message());
@@ -97,34 +95,18 @@ namespace http_service {
     }
 
     void HttpServer::do_accept() {
-        m_acceptor.async_accept([this](beast::error_code ec,
-                                       tcp::socket socket) {
-            if (!ec) {
-                auto buffer = std::make_shared<beast::flat_buffer>();
-                auto request =
-                    std::make_shared<http::request<http::string_body>>();
-                http::async_read(
-                    socket, *buffer, *request,
-                    [this, socket = std::move(socket), buffer,
-                     request](beast::error_code ec, size_t bytes_transferred) {
-                        if (!ec) {
-                            if (request->target() == "/ws-test") {
-                                std::make_shared<WebSocketSession>(
-                                    std::move(socket), m_ioc)
-                                    ->start();
-                            } else {
-                                std::make_shared<Session>(std::move(socket),
-                                                        m_bind_apis)
-                                    ->start();
-                            }
+        m_acceptor.async_accept(
+            [this](beast::error_code ec, tcp::socket socket) {
+                if (!ec) {
+                    // std::make_shared<Session>(std::move(socket), m_bind_apis)
+                    //     ->start();
+                    std::make_shared<WebSocketSession>(std::move(socket), m_ioc)
+                        ->start();
+                }
 
-                            do_accept();
-                        }
-                    });
-            }
-        });
-        // keep listening
-        do_accept();
+                // keep listening
+                do_accept();
+            });
     }
 
     void HttpServer::start_threads() {
