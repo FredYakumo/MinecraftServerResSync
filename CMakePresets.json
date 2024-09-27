@@ -21,6 +21,15 @@
       }
     },
     {
+      "name": "ninja",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/",
+      "cacheVariables": {
+        "CMAKE_CXX_STANDARD": "20",
+        "CMAKE_CXX_STANDARD_REQUIRED": true
+      }
+    },
+    {
       "name": "windows-ninja-vcpkg",
       "hidden": true,
       "generator": "Ninja",
@@ -65,6 +74,13 @@
       }
     },
     {
+      "name": "ninja-debug",
+      "inherits": "ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
       "name": "make-debug",
       "inherits": "make-file",
       "cacheVariables": {
@@ -94,24 +110,29 @@
       "configuration": "Debug"
     },
     {
-      "name": "windows-debug-build",
+      "name": "windows-ninja-debug-build",
       "configurePreset": "windows-ninja-vcpkg-debug",
       "configuration": "Debug"
     },
     {
-      "name": "windows-release-build",
+      "name": "windows-ninja-release-build",
       "configurePreset": "windows-ninja-vcpkg-release",
       "configuration": "Release"
     },
     {
-      "name": "make-file-debug-build",
+      "name": "make-debug-build",
       "configurePreset": "make-debug",
       "configuration": "Debug"
     },
     {
-      "name": "make-file-release-build",
+      "name": "make-release-build",
       "configurePreset": "make-release",
       "configuration": "Release"
+    },
+    {
+      "name": "ninja-debug-build",
+      "configurePreset": "ninja-debug",
+      "configuration": "Debug"
     }
   ]
 }
