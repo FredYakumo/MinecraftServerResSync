@@ -9,6 +9,7 @@
     "boost-format",
     "boost-filesystem",
     "boost-system",
+    "boost-url",
     "spdlog",
     "yaml-cpp",
     "openssl",
