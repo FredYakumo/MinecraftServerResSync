@@ -131,7 +131,7 @@ namespace models {
 
     struct Api {
         boost::beast::http::verb method;
-        std::function<void(const boost::beast::http::request<boost::beast::http::string_body> &, boost::beast::http::response<boost::beast::http::string_body> &,  std::unordered_map<std::string_view, std::string_view> query_param_map)> api_function;
+        std::function<void(const boost::beast::http::request<boost::beast::http::string_body> &, boost::beast::http::response<boost::beast::http::string_body> &,  const std::unordered_map<std::string_view, std::string_view> &query_param_map)> api_function;
     };
 
 } // namespace models

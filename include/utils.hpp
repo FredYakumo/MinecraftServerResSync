@@ -30,15 +30,19 @@ namespace utils {
 
     class SplitString {
     public:
-        SplitString(std::string_view str, char delimiter) : m_str(str), m_delimiter(delimiter), m_start(0) {}
+        SplitString(const std::string_view str, const char delimiter) : m_str(str), m_delimiter(delimiter), m_start(0) {}
 
         class Iterator {
         public:
-            Iterator(std::string_view str, char delimiter, size_t start) : m_str(str), m_delimiter(delimiter), m_start(start) { find_next(); }
-
-            std::string_view operator*() const {
-                return m_str.substr(m_start, (m_end == std::string_view::npos) ? std::string_view::npos : m_end - m_start);
+            Iterator(const std::string_view str, const char delimiter, const size_t start) : m_str(str), m_delimiter(delimiter), m_start(start) {
+                if (str.empty()) {
+                    m_start = m_end = std::string_view::npos;
+                } else {
+                    find_next();
+                }
             }
+
+            std::string_view operator*() const { return m_str.substr(m_start, (m_end == std::string_view::npos) ? std::string_view::npos : m_end - m_start); }
 
             Iterator &operator++() {
                 m_start = m_end;
@@ -49,15 +53,15 @@ namespace utils {
                 return *this;
             }
 
-            bool operator!=(const Iterator &other) const {
-                return m_start != other.m_start;
+            bool operator!=(const Iterator &other) const { return m_start != other.m_start; }
+            Iterator operator++(int) {
+                const Iterator tmp = *this;
+                ++*this;
+                return tmp;
             }
 
         private:
-            void find_next() {
-                m_end = m_str.find(m_delimiter, m_start);
-            }
-
+            void find_next() { m_end = m_str.find(m_delimiter, m_start); }
 
             std::string_view m_str;
             char m_delimiter;

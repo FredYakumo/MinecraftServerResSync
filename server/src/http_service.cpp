@@ -29,7 +29,6 @@ namespace http_service {
         const boost::system::result<boost::url_view> url{boost::urls::parse_uri_reference(target)};
 
         spdlog::info("Get request from: {0}, path: {1}", m_socket.remote_endpoint().address().to_string(), target);
-        spdlog::debug("Query: {}", url->query());
 
         const auto thread_id = boost::this_thread::get_id();
         spdlog::debug("Thread id: {0}", thread_id_to_string(thread_id));
@@ -45,19 +44,15 @@ namespace http_service {
                 res.prepare_payload();
             } else {
                 try {
-                const std::string param = url->query();
-                const auto query_it = utils::SplitString(param, '&');
-                std::unordered_map<std::string_view, std::string_view> param_map{};
-                auto q = query_it.begin();
-                for (auto begin = query_it.begin(); begin != query_it.end(); ++begin) {
-                    utils::SplitString::Iterator p_it = utils::SplitString(*begin, '=').begin();
-                    auto key = *p_it;
-                    ++p_it;
-                    auto value = *p_it;
-                    param_map.emplace(key, value);
-                }
+                    const std::string param{url->query()};
+                    const auto query_it = utils::SplitString(param, '&');
+                    std::unordered_map<std::string_view, std::string_view> param_map{};
+                    for (const auto begin : query_it) {
+                        utils::SplitString::Iterator p_it = utils::SplitString(begin, '=').begin();
+                        param_map.emplace(*p_it++, *p_it);
+                    }
 
-                api->second.api_function(m_req, res, std::move(param_map));
+                    api->second.api_function(m_req, res, param_map);
                 } catch (const std::exception &e) {
                     spdlog::error("{}", e.what());
                 }
@@ -142,7 +137,8 @@ namespace http_service {
         try {
             HttpServer server(host_address, port, threads_count);
 
-            server.register_api("/test", models::Api{http::verb::get, [](const http::request<http::string_body> &, http::response<http::string_body> &res, std::unordered_map<std::string_view, std::string_view>) {
+            server.register_api("/test", models::Api{http::verb::get, [](const http::request<http::string_body> &, http::response<http::string_body> &res,
+                                                                         std::unordered_map<std::string_view, std::string_view>) {
                                                          write_json_result(boost::json::value{{"result", "success"}}, res);
                                                      }});
             components::register_component_apis(server);
