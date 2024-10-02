@@ -3,3 +3,5 @@ build/
 **/.cache/
 /.vs
 cmake-build-debug/
+.idea/
+/vcpkg_installed/

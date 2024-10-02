@@ -9,7 +9,8 @@
       "cacheVariables": {
         "CMAKE_CXX_STANDARD": "20",
         "CMAKE_CXX_STANDARD_REQUIRED": true,
-        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "CMAKE_CXX_FLAGS": "/bigobj /EHsc"
       }
     },
     {
@@ -17,6 +18,15 @@
       "inherits": "msvc-vcpkg",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "ninja",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/",
+      "cacheVariables": {
+        "CMAKE_CXX_STANDARD": "20",
+        "CMAKE_CXX_STANDARD_REQUIRED": true
       }
     },
     {
@@ -46,9 +56,7 @@
         "CMAKE_C_COMPILER": "gcc",
         "CMAKE_CXX_COMPILER": "g++",
         "CMAKE_C_STANDARD": "17",
-        "CMAKE_CXX_STANDARD": "17",
-        "spdlog_DIR": "${sourceDir}/external/spdlog/build",
-        "yaml-cpp_DIR": "${sourceDir}/external/yaml-cpp/build"
+        "CMAKE_CXX_STANDARD": "17"
       }
     },
     {
@@ -63,6 +71,13 @@
       "inherits": "windows-ninja-vcpkg",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "ninja-debug",
+      "inherits": "ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
       }
     },
     {
@@ -95,24 +110,29 @@
       "configuration": "Debug"
     },
     {
-      "name": "windows-debug-build",
+      "name": "windows-ninja-debug-build",
       "configurePreset": "windows-ninja-vcpkg-debug",
       "configuration": "Debug"
     },
     {
-      "name": "windows-release-build",
+      "name": "windows-ninja-release-build",
       "configurePreset": "windows-ninja-vcpkg-release",
       "configuration": "Release"
     },
     {
-      "name": "make-file-debug-build",
+      "name": "make-debug-build",
       "configurePreset": "make-debug",
       "configuration": "Debug"
     },
     {
-      "name": "make-file-release-build",
+      "name": "make-release-build",
       "configurePreset": "make-release",
       "configuration": "Release"
+    },
+    {
+      "name": "ninja-debug-build",
+      "configurePreset": "ninja-debug",
+      "configuration": "Debug"
     }
   ]
 }
