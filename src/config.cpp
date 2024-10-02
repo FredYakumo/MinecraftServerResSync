@@ -5,7 +5,7 @@
 #include "utils.hpp"
 #include <fstream>
 #include <memory>
-#include <mutex>
+#include <res_manage.h>
 #include <spdlog/spdlog.h>
 #include <string>
 #include <yaml-cpp/exceptions.h>
@@ -79,4 +79,11 @@ result::Result init_server_data_from_config_yaml_file(const char *file_path) {
                                                            thread_count));
 
     return result::Success;
+}
+
+void init_manage_res_hash() {
+    const auto class_file_hash =
+        res_manage::fetch_file_hash_map_from_managed_res(
+            *g_manage_class_path_map.get_const(), {"unused"});
+    g_server_data.get_mut().get()->set_class_file_resources(class_file_hash);
 }
