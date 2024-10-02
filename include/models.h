@@ -5,6 +5,7 @@
 #include <boost/beast/http/error.hpp>
 #include <boost/beast/http/message.hpp>
 #include <boost/beast/http/string_body.hpp>
+#include <boost/beast/http/dynamic_body.hpp>
 #include <boost/beast/http/verb.hpp>
 #include <cstdint>
 #include <memory>
@@ -131,7 +132,7 @@ namespace models {
 
     struct Api {
         boost::beast::http::verb method;
-        std::function<void(const boost::beast::http::request<boost::beast::http::string_body> &, boost::beast::http::response<boost::beast::http::string_body> &,  const std::unordered_map<std::string_view, std::string_view> &query_param_map)> api_function;
+        std::function<void(const boost::beast::http::request<boost::beast::http::string_body> &, boost::beast::http::response<boost::beast::http::dynamic_body> &,  const std::unordered_map<std::string_view, std::string_view> &query_param_map)> api_function;
     };
 
 } // namespace models

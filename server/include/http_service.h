@@ -53,7 +53,7 @@ namespace http_service {
 
         void handle_request();
 
-        void do_write(http::response<http::string_body> &&res);
+        void do_write(http::response<http::dynamic_body> &&res);
 
         tcp::socket m_socket;
         beast::flat_buffer m_buffer;
@@ -167,12 +167,14 @@ namespace http_service {
         std::unordered_map<std::string, models::Api> m_bind_apis;
     };
 
-    inline void write_json_result(boost::json::value json,
-                                  http::response<http::string_body> &out_res) {
-        out_res.result(http::status::ok);
+    inline void write_json_result(http::status status,
+                                    boost::json::value json,
+                                  http::response<http::dynamic_body> &out_res) {
+        out_res.result(status);
         out_res.set(http::field::content_type, "application/json");
-        out_res.body() = serialize(json);
 
+        ostream(out_res.body()) << serialize(json);
+        out_res.content_length(out_res.body().size());
         out_res.prepare_payload();
     }
 

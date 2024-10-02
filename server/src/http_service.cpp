@@ -2,6 +2,7 @@
 #include "components.h"
 #include <boost/asio.hpp>
 #include <boost/beast/websocket.hpp>
+#include <boost/json.hpp>
 #include <boost/url/parse.hpp>
 #include <exception>
 #include <spdlog/spdlog.h>
@@ -28,19 +29,30 @@ namespace http_service {
         const std::string_view target{m_req.target()};
         const boost::system::result<boost::url_view> url{boost::urls::parse_uri_reference(target)};
 
+        http::response<http::dynamic_body> res;
+
+        if (!url.has_value()) {
+            spdlog::error("Invalid URL: {}", url.error().message());
+            res.result(http::status::internal_server_error);
+            http_service::write_json_result(http::status::ok, boost::json::value {
+                {"message", fmt::format("Invalid URL: {}", target)}
+            }, res);
+            do_write(std::move(res));
+            return;
+        }
+
         spdlog::info("Get request from: {0}, path: {1}", m_socket.remote_endpoint().address().to_string(), target);
 
         const auto thread_id = boost::this_thread::get_id();
         spdlog::debug("Thread id: {0}", thread_id_to_string(thread_id));
 
-        http::response<http::string_body> res;
         // route
         if (const auto &api = m_bind_apis.find(url->path()); api != m_bind_apis.cend()) {
             if (m_req.method() != api->second.method) {
                 res.result(http::status::bad_request);
                 res.set(http::field::content_type, "text/plain");
 
-                res.body() = (boost::format("Bad request method: {}") % m_req.method()).str();
+                ostream(res.body()) << (boost::format("Bad request method: {}") % m_req.method()).str();
                 res.prepare_payload();
             } else {
                 try {
@@ -49,7 +61,9 @@ namespace http_service {
                     std::unordered_map<std::string_view, std::string_view> param_map{};
                     for (const auto begin : query_it) {
                         utils::SplitString::Iterator p_it = utils::SplitString(begin, '=').begin();
-                        param_map.emplace(*p_it++, *p_it);
+                        const auto key = *p_it++;
+                        const auto value = *p_it;
+                        param_map.emplace(key, value);
                     }
 
                     api->second.api_function(m_req, res, param_map);
@@ -59,15 +73,15 @@ namespace http_service {
             }
         } else {
             res.result(http::status::not_found);
-            res.body() = "404: Not Found";
+            ostream(res.body()) << "404: Not Found";
             res.prepare_payload();
         }
 
         do_write(std::move(res));
     }
 
-    void Session::do_write(http::response<http::string_body> &&res) {
-        auto sp_res = std::make_shared<http::response<http::string_body>>(std::move(res));
+    void Session::do_write(http::response<http::dynamic_body> &&res) {
+        auto sp_res = std::make_shared<http::response<http::dynamic_body>>(std::move(res));
         auto self = shared_from_this();
         http::async_write(m_socket, *sp_res, [self, sp_res](beast::error_code ec, std::size_t) {
             if (!ec) {
@@ -137,9 +151,9 @@ namespace http_service {
         try {
             HttpServer server(host_address, port, threads_count);
 
-            server.register_api("/test", models::Api{http::verb::get, [](const http::request<http::string_body> &, http::response<http::string_body> &res,
+            server.register_api("/test", models::Api{http::verb::get, [](const http::request<http::string_body> &, http::response<http::dynamic_body> &res,
                                                                          std::unordered_map<std::string_view, std::string_view>) {
-                                                         write_json_result(boost::json::value{{"result", "success"}}, res);
+                                                         write_json_result(http::status::ok, boost::json::value{{"result", "success"}}, res);
                                                      }});
             components::register_component_apis(server);
             server.run();

@@ -8,7 +8,7 @@ namespace components {
     using request =
         boost::beast::http::request<boost::beast::http::string_body>;
     using response =
-        boost::beast::http::response<boost::beast::http::string_body>;
+        boost::beast::http::response<boost::beast::http::dynamic_body>;
     using verb = boost::beast::http::verb;
 
     void register_component_apis(http_service::HttpServer &server);
