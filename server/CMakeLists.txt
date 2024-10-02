@@ -1,8 +1,9 @@
 include_directories(${PROJECT_ROOT}/server/include)
 
+aux_source_directory(${PROJECT_ROOT}/src BASE_SRC_FILES)
 aux_source_directory(${PROJECT_ROOT}/server/src SRC_FILES)
 
-add_executable(server ${SRC_FILES})
+add_executable(server ${BASE_SRC_FILES} ${SRC_FILES})
 
 target_link_libraries(server PRIVATE Boost::thread Boost::chrono Boost::json Boost::system Boost::url)
 target_link_libraries(server PRIVATE Boost::filesystem)

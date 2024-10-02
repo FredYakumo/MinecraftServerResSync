@@ -31,6 +31,7 @@ include_directories(${PROJECT_ROOT}/include)
 add_subdirectory(client)
 add_subdirectory(server)
 
+
 enable_testing()
 
 find_package(Catch2 REQUIRED)
