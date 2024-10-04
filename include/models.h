@@ -125,9 +125,9 @@ namespace models {
             return *this;
         }
         [[nodiscard]] const ClassFileResource *class_file_resource() const { return !m_class_file_resources ? nullptr : &m_class_file_resources->get_const(); }
+        [[nodiscard]] const std::string_view host() const { return std::string_view{m_host}; }
         [[nodiscard]] uint64_t listen_port() const { return m_listen_port; }
         [[nodiscard]] uint16_t thread_count() const { return m_thread_count; }
-        [[nodiscard]] std::string_view host() const { return m_host; }
     };
 
     struct Api {

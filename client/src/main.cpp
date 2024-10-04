@@ -18,7 +18,9 @@ ShareMutexData<std::shared_ptr<ServerData>> g_server_data{nullptr};
 
 int main() {
     spdlog::set_level(spdlog::level::debug);
-
+    
     init_server_data_from_config_yaml_file("config.yaml");
     init_manage_res_hash();
+    
+    debug("Target server host: {}", g_server_data.get_const()->host());
 }
