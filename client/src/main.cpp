@@ -4,6 +4,8 @@
 
 #include "config.h"
 
+#include "http_utils.hpp"
+
 using spdlog::debug;
 using spdlog::error;
 using spdlog::info;
