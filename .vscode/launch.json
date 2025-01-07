@@ -7,6 +7,14 @@
         {
             "type": "lldb",
             "request": "launch",
+            "name": "Debug client",
+            "program": "${workspaceFolder}/build/client/client",
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
             "name": "Debug server",
             "program": "${workspaceFolder}/build/server/server",
             "args": [],
