@@ -12,9 +12,10 @@
 #include <utils.hpp>
 
 namespace http_service {
-    namespace beast = boost::beast;   // from <boost/beast.hpp>
-    namespace http = beast::http;     // from <boost/beast/http.hpp>
-    using tcp = boost::asio::ip::tcp; // from <boost/asio/ip/tcp.hpp>
+    namespace beast = boost::beast;
+    namespace http = beast::http;
+    using tcp = boost::asio::ip::tcp;
+    namespace json = boost::json;
 
     void Session::do_read() {
         auto self = shared_from_this();
@@ -34,9 +35,7 @@ namespace http_service {
         if (!url.has_value()) {
             spdlog::error("Invalid URL: {}", url.error().message());
             res.result(http::status::internal_server_error);
-            http_service::write_json_result(http::status::ok, boost::json::value {
-                {"message", fmt::format("Invalid URL: {}", target)}
-            }, res);
+            http_service::write_json_result(http::status::ok, json::value{{"message", fmt::format("Invalid URL: {}", target)}}, res);
             do_write(std::move(res));
             return;
         }

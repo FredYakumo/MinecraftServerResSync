@@ -31,6 +31,7 @@ include_directories(${PROJECT_ROOT}/include)
 add_subdirectory(client)
 add_subdirectory(server)
 
+
 enable_testing()
 
 find_package(Catch2 REQUIRED)
@@ -42,3 +43,9 @@ include(CTest)
 include(Catch)
 
 add_test(NAME utils_test COMMAND utils_test)
+
+if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_definitions(-DSPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_WARN)
+else()
+    add_definitions(-DSPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_DEBUG)
+endif()

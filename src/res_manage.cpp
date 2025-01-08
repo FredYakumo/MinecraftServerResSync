@@ -2,8 +2,8 @@
 #include "models.h"
 #include "utils.hpp"
 #include <boost/filesystem.hpp>
-#include <fstream>
 #include <spdlog/spdlog.h>
+#include <fstream>
 #include <string>
 #include <unordered_map>
 #include <vector>

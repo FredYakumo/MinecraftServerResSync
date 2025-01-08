@@ -20,13 +20,6 @@ ShareMutexData<std::shared_ptr<ManageClassPathMap>> g_manage_class_path_map{
     nullptr};
 ShareMutexData<std::shared_ptr<ServerData>> g_server_data{nullptr};
 
-void init_manage_res_hash() {
-    const auto class_file_hash =
-        res_manage::fetch_file_hash_map_from_managed_res(
-            *g_manage_class_path_map.get_const(), {"unused"});
-    g_server_data.get_mut().get()->set_class_file_resources(class_file_hash);
-}
-
 int main(int argc, char *argv[]) {
     spdlog::set_level(spdlog::level::debug);
 
