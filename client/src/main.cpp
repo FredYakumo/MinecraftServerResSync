@@ -28,7 +28,6 @@ int main() {
     debug("Target server host: {}", g_server_data.get_const()->host());
 
     auto response = http_util::send_request("127.0.0.1", "/getResourceList", boost::beast::http::verb::get, "");
-    // debug("response: {}", std::string{ std::cbegin(response), std::cend(response)});
     std::string content{response.data()};
     info("Send http Response: {}", content);
 }

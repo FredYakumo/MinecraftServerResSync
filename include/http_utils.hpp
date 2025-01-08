@@ -52,7 +52,7 @@ namespace http_util {
             const auto &buffers = body.data();
             for (const auto &buffer : buffers) {
                 const byte_type *data = asio::buffer_cast<const byte_type *>(buffer);
-                for (size_t i = 0; i < body.size(); ++i) {
+                for (size_t i = 0; i < buffer.size(); ++i) {
                     res.push_back(*(data + i));
                 }
             }
