@@ -56,6 +56,7 @@ namespace http_util {
                     res.push_back(*(data + i));
                 }
             }
+            res.push_back('\0');
             boost::system::error_code ec;
             socket.shutdown(asio::ip::tcp::socket::shutdown_both, ec);
 
