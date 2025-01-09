@@ -3,9 +3,11 @@
 
 #include <boost/asio/buffer.hpp>
 #include <boost/asio/connect.hpp>
+#include <boost/asio/error.hpp>
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/beast/core.hpp>
+#include <boost/beast/core/error.hpp>
 #include <boost/beast/core/flat_buffer.hpp>
 #include <boost/beast/http.hpp>
 #include <boost/beast/http/dynamic_body.hpp>
@@ -58,7 +60,10 @@ namespace http_util {
             }
             boost::system::error_code ec;
             socket.shutdown(asio::ip::tcp::socket::shutdown_both, ec);
-
+            if (ec && ec != asio::error::not_connected) {
+                spdlog::error("{}", ec.what());
+                throw beast::system_error{ec};
+            }
             return res;
         } catch (const std::exception &e) {
             spdlog::error("Send http request error: {}", e.what());
