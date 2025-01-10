@@ -1,12 +1,16 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include "commands.h"
 #include <cstring>
+#include <error.h>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <expected>
 #include <openssl/sha.h>
 #include <sstream>
+#include <result.h>
 #include <sys/types.h>
 
 namespace utils {
@@ -77,6 +81,13 @@ namespace utils {
         char m_delimiter;
         size_t m_start;
     };
+
+
+    auto parse_args(int argc, char *argv[]) -> wrapper::result<command::commands> {
+        return std::unexpected(error::other);
+    }
+
+
 } // namespace utils
 
 #endif

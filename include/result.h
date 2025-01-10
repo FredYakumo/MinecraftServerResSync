@@ -1,8 +1,13 @@
 #ifndef RESULT_H
 #define RESULT_H
 
-namespace result {
-enum Result { Success, Failed, FileNotFound, Other };
+#include <error.h>
+#include <expected>
+
+namespace wrapper {
+    template <typename T>
+    using result = std::expected<T, error>;
 }
+
 
 #endif
