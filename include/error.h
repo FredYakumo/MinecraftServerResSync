@@ -3,7 +3,8 @@
 
 
 enum class error {
-    other
+    other,
+    file_not_found
 };
 
 

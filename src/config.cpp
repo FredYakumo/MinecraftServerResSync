@@ -3,6 +3,7 @@
 #include "models.h"
 #include "result.h"
 #include "utils.hpp"
+#include <exception>
 #include <fstream>
 #include <memory>
 #include <res_manage.h>
@@ -11,7 +12,7 @@
 #include <yaml-cpp/exceptions.h>
 #include <yaml-cpp/yaml.h>
 
-result::Result init_class_file_path(const YAML::Node &node) {
+void init_class_file_path(const YAML::Node &node) {
     g_manage_class_path_map.set(std::make_shared<models::ManageClassPathMap>());
 
     for (auto class_it : node) {
@@ -44,28 +45,29 @@ result::Result init_class_file_path(const YAML::Node &node) {
         g_manage_class_path_map.get_mut().get()->managed_class_map.insert(
             std::make_pair(std::move(class_name), cs));
     }
-    return result::Success;
 }
 
-result::Result init_server_data_from_config_yaml_file(const char *file_path) {
+wrapper::result<void> init_server_data_from_config_yaml_file(const char *file_path) {
 
     spdlog::debug("Load config file from: {0}", file_path);
     auto fs = std::ifstream{file_path};
     if (!fs.is_open()) {
         spdlog::error("load config from yaml failed: {0} not found.",
                       file_path);
-        return result::FileNotFound;
+        return std::unexpected(error::file_not_found);
     }
 
     auto config = YAML::Load(utils::read_to_end(fs));
 
     if (!config["res"]) {
         spdlog::error("Config load failed: not found [res]");
-        return result::Failed;
+        return std::unexpected(error::other);
     }
-    if (init_class_file_path(config["res"]) != result::Success) {
+    try {
+        init_class_file_path(config["res"]);
+    } catch (std::exception e) {
         spdlog::error("Config load failed at node: res");
-        return result::Failed;
+        return std::unexpected(error::other);
     }
 
     uint64_t port = !config["port"] ? 25576 : config["port"].as<uint64_t>();
@@ -78,7 +80,7 @@ result::Result init_server_data_from_config_yaml_file(const char *file_path) {
     g_server_data.set(std::make_shared<models::ServerData>(nullptr, host, port,
                                                            thread_count));
 
-    return result::Success;
+    return wrapper::result<void>();
 }
 
 void init_manage_res_hash() {

@@ -5,9 +5,12 @@
 #include <expected>
 
 namespace wrapper {
-    template <typename T>
-    using result = std::expected<T, error>;
-}
+    template <typename T> using result = std::expected<T, error>;
 
+    using ok = result<void>;
+    template <typename ErrTy> using err = std::unexpected<ErrTy>;
+} // namespace wrapper
+
+// #define OK wrapper::result<void>
 
 #endif

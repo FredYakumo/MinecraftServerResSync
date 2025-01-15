@@ -151,7 +151,7 @@ namespace http_service {
         out_res.prepare_payload();
     }
 
-    result::Result start_service(std::string_view host_address, uint16_t port, int threads_count);
+    wrapper::result<void> start_service(std::string_view host_address, uint16_t port, int threads_count);
 } // namespace http_service
 
 #endif

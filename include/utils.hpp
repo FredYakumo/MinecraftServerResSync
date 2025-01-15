@@ -1,7 +1,6 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include "commands.h"
 #include <cstring>
 #include <error.h>
 #include <fstream>
@@ -83,9 +82,9 @@ namespace utils {
     };
 
 
-    auto parse_args(int argc, char *argv[]) -> wrapper::result<command::commands> {
-        return std::unexpected(error::other);
-    }
+    // auto parse_args(int argc, char *argv[]) -> wrapper::result<void> {
+    //     return std::unexpected(error::other);
+    // }
 
 
 } // namespace utils

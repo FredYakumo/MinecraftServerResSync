@@ -4,7 +4,7 @@
 #include <iostream>
 #include <spdlog/spdlog.h>
 #include <expected>
-#include <tclap/
+// #include <tclap/
 
 #include "config.h"
 
@@ -35,8 +35,8 @@ int main(int argc, char *argv[]) {
     info("Send http Response: {}", content);
 
 
-    auto command = utils::parse_args(argc, argv);
-    if (command.has_value()) {
+    // auto command = utils::parse_args(argc, argv);
+    // if (command.has_value()) {
         
-    }
+    // }
 }

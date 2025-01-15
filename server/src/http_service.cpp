@@ -1,5 +1,6 @@
 #include "http_service.h"
 #include "components.h"
+#include "result.h"
 #include <boost/asio.hpp>
 #include <boost/beast/websocket.hpp>
 #include <boost/json.hpp>
@@ -14,8 +15,12 @@
 namespace http_service {
     namespace beast = boost::beast;
     namespace http = beast::http;
-    using tcp = boost::asio::ip::tcp;
     namespace json = boost::json;
+    using tcp = boost::asio::ip::tcp;
+    using wrapper::ok;
+    using wrapper::err;
+    using spdlog::error;
+    using spdlog::info;
 
     void Session::do_read() {
         auto self = shared_from_this();
@@ -145,7 +150,7 @@ namespace http_service {
 
     //------------------------------------------------------------------------------
 
-    result::Result start_service(const std::string_view host_address, uint16_t port, int threads_count) {
+    wrapper::result<void> start_service(const std::string_view host_address, uint16_t port, int threads_count) {
         spdlog::info("Start http daemon: {0}:{1}, with {2} thread(s)", host_address, port, threads_count);
         try {
             HttpServer server(host_address, port, threads_count);
@@ -157,10 +162,9 @@ namespace http_service {
             components::register_component_apis(server);
             server.run();
         } catch (const std::exception &e) {
-            spdlog::error("Error: {0}", e.what());
-            return result::Failed;
+            error("Error: {0}", e.what());
+            return err(error::other);
         }
-
-        return result::Success;
+        return ok();
     }
 } // namespace http_service
