@@ -5,6 +5,7 @@
 #include "tclap/CmdLine.h"
 #include "tclap/ValueArg.h"
 #include <unordered_map>
+#include "commands.h"
 
 namespace commands {
     class parse_client_commands {

@@ -5,6 +5,7 @@
 #include <boost/beast/websocket.hpp>
 #include <boost/json.hpp>
 #include <boost/url/parse.hpp>
+#include <error.h>
 #include <exception>
 #include <spdlog/spdlog.h>
 #include <utility>
@@ -18,7 +19,7 @@ namespace http_service {
     namespace json = boost::json;
     using tcp = boost::asio::ip::tcp;
     using wrapper::ok;
-    using wrapper::err;
+    using err = wrapper::err<error>;
     using spdlog::error;
     using spdlog::info;
 

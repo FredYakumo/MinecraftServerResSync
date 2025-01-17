@@ -1,4 +1,5 @@
 #include "main.h"
+#include "commands.h"
 #include "http_utils.hpp"
 #include <boost/beast/http/verb.hpp>
 #include <iostream>
@@ -25,18 +26,20 @@ ShareMutexData<std::shared_ptr<ServerData>> g_server_data{nullptr};
 int main(int argc, char *argv[]) {
     spdlog::set_level(spdlog::level::debug);
 
-    init_server_data_from_config_yaml_file("config.yaml");
-    init_manage_res_hash();
+    // init_server_data_from_config_yaml_file("config.yaml");
+    // init_manage_res_hash();
 
-    debug("Target server host: {}", g_server_data.get_const()->host());
+    // debug("Target server host: {}", g_server_data.get_const()->host());
 
-    auto response = http_util::send_request("127.0.0.1", "/getResourceList", boost::beast::http::verb::get, "");
-    std::string content{response.data()};
-    info("Send http Response: {}", content);
+    // auto response = http_util::send_request("127.0.0.1", "/getResourceList", boost::beast::http::verb::get, "");
+    // std::string content{response.data()};
+    // info("Send http Response: {}", content);
 
 
     // auto command = utils::parse_args(argc, argv);
     // if (command.has_value()) {
         
     // }
+
+    commands::parse_client_commands(argc, argv);
 }
