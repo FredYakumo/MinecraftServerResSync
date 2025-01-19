@@ -9,6 +9,7 @@
 #include <res_manage.h>
 #include <spdlog/spdlog.h>
 #include <string>
+#include <string_view>
 #include <yaml-cpp/exceptions.h>
 #include <yaml-cpp/yaml.h>
 
@@ -47,10 +48,10 @@ void init_class_file_path(const YAML::Node &node) {
     }
 }
 
-wrapper::result<void> init_server_data_from_config_yaml_file(const char *file_path) {
+wrapper::result<void> init_server_data_from_config_yaml_file(const std::string_view file_path) {
 
-    spdlog::debug("Load config file from: {0}", file_path);
-    auto fs = std::ifstream{file_path};
+    spdlog::debug("Load config file from: {}", file_path);
+    auto fs = std::ifstream{file_path.data()};
     if (!fs.is_open()) {
         spdlog::error("load config from yaml failed: {0} not found.",
                       file_path);

@@ -4,6 +4,7 @@
 #include "result.h"
 #include <spdlog/spdlog.h>
 #include <string>
+#include <string_view>
 #include <tclap/CmdLine.h>
 #include <tclap/ValueArg.h>
 
@@ -19,8 +20,8 @@ namespace commands {
     using wrapper::err;
     using wrapper::ok;
 
-    wrapper::result<void> load_config(const TCLAP::ValueArg<std::string> &config_path) {
-        const auto res = init_server_data_from_config_yaml_file(config_path.getValue().c_str());
+    wrapper::result<void> load_config(const std::string_view config_path) {
+        const auto res = init_server_data_from_config_yaml_file(config_path);
         if (!res.has_value()) {
             error("Load config error: {}", to_string(res.error()));
             return err(res.error());
@@ -38,6 +39,6 @@ namespace commands {
 
         cmd.parse(argc, argv);
 
-        load_config(cmd_values::config_path_arg);
+        load_config(cmd_values::config_path_arg.getValue());
     }
 } // namespace commands

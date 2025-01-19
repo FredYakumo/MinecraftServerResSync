@@ -15,9 +15,9 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug client -c config.yaml",
+            "name": "Debug client -c test_config.yaml",
             "program": "${workspaceFolder}/build/client/client",
-            "args": ["-c config.yaml"],
+            "args": ["-c test_config.yaml"],
             "cwd": "${workspaceFolder}"
         },
         {
