@@ -15,6 +15,22 @@
         {
             "type": "lldb",
             "request": "launch",
+            "name": "Debug client -c config.yaml",
+            "program": "${workspaceFolder}/build/client/client",
+            "args": ["-c config.yaml"],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug client --help",
+            "program": "${workspaceFolder}/build/client/client",
+            "args": ["--help"],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
             "name": "Debug server",
             "program": "${workspaceFolder}/build/server/server",
             "args": [],
