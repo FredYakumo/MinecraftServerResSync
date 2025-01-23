@@ -164,7 +164,7 @@ namespace http_service {
             server.run();
         } catch (const std::exception &e) {
             error("Error: {0}", e.what());
-            return err(error::other);
+            return std::unexpected(error::other);
         }
         return ok();
     }
